@@ -44,14 +44,16 @@ func CheckGormError(c *gin.Context, err error) (int, error) {
 }
 
 // ReturnIfGormError checks if the error is a GORM err found and aborts with json response and  appropreate status code if it is
-func ReturnIfGormError(c *gin.Context, err error) {
+func ReturnIfGormError(c *gin.Context, err error) bool {
 	status, errNew := CheckGormError(c, err)
 	if status != 0 && errNew != nil {
 		c.AbortWithStatusJSON(status, gin.H{"error": errNew.Error()})
-		return
+		return true
 	}
 	if errNew == nil && status == 0 {
 
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return false
 	}
+	return false
 }
