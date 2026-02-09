@@ -50,10 +50,6 @@ func ReturnIfGormError(c *gin.Context, err error) bool {
 		c.AbortWithStatusJSON(status, gin.H{"error": errNew.Error()})
 		return true
 	}
-	if errNew == nil && status == 0 {
 
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return false
-	}
 	return false
 }

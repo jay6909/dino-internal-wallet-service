@@ -15,7 +15,7 @@ func NewUserHandler(userRepository repository.UserRepository) *UserHandler {
 	return &UserHandler{userRepository: userRepository}
 }
 
-func (h *UserHandler) RegisterRoutes(r *gin.Engine) {
+func (h *UserHandler) RegisterRoutes(r *gin.RouterGroup) {
 	route := r.Group("/users")
 	route.GET("/:id", h.GetUserByID)
 

@@ -27,10 +27,10 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 
 func (r *userRepositoryImpl) GetUserByID(userID string) (*User, error) {
 	var user User
-	if err := r.db.First(&user, userID).Error; err != nil {
+	if err := r.db.Where("id = ?", userID).First(&user).Error; err != nil {
 		return nil, err
 	}
-	return nil, nil
+	return &user, nil
 }
 
 func (r *userRepositoryImpl) CreateUser(user *User) error {
