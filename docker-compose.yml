@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: wallet-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wallet      
+      MYSQL_USER: wallet
+      MYSQL_PASSWORD: wallet
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: wallet-api
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      APP_PORT: 8080
+      DATABASE_DSN: wallet:wallet@tcp(db:3306)/wallet?parseTime=true&charset=utf8mb4&loc=UTC
+      DB_PORT: 3306
+      DB_NAME: wallet
+      DB_USER: wallet
+      DB_PASSWORD: wallet
+    command: ["./app",]  
+    restart: unless-stopped
+  seed:
+    build: .                  # 👈 use your Go image
+    environment:
+      DATABASE_DSN: wallet:wallet@tcp(db:3306)/wallet?parseTime=true&charset=utf8mb4&loc=UTC
+      SEED: "true"
+    command: ["./app"]
+
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+volumes:
+  db_data:
