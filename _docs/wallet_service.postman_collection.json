@@ -1,0 +1,136 @@
+{
+	"info": {
+		"_postman_id": "3043b237-b58f-4e72-a25b-788995f5f100",
+		"name": "wallet_service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42902019"
+	},
+	"item": [
+		{
+			"name": "topup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idempotency_key\":\"uuidkey1example\",\r\n    \"owner_id\":\"d3f57c3b-3a35-4b6a-9c22-3f8f9e3c1111\",\r\n    \"currency_type_id\":\"59d55466-4b46-4429-91ae-defe72e0fa09\",\r\n    \"amount\":20\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/wallets/top-up",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"top-up"
+					]
+				},
+				"description": "## Top-Up Wallet API\n\nThis endpoint allows users to top up their wallet by adding a specified amount of currency. It is designed to facilitate the addition of funds to a user's wallet, ensuring that transactions are processed securely and efficiently.\n\n### Request\n\n**Method:** POST  \n**Endpoint:** `{{base_url}}/api/v1/wallets/top-up`\n\n#### Request Body Parameters\n\nThe request body must be in JSON format and contain the following parameters:\n\n- **idempotency_key** (string): A unique key to ensure that the request is processed only once. This is useful for preventing duplicate transactions.\n    \n- **owner_id** (string): The unique identifier of the wallet owner. This indicates which user's wallet is being topped up.\n    \n- **currency_type_id** (string): The unique identifier for the type of currency being added to the wallet. This allows for flexibility in handling multiple currency types.\n    \n- **amount** (number): The amount of currency to be added to the wallet. This should be a positive number representing the value to be topped up.\n    \n\n### Response\n\nUpon a successful request, the API will return a response with the following structure:\n\n- **Status:** 200 OK\n    \n- **Content-Type:** application/json\n    \n\n#### Response Body\n\nThe response body will contain the following fields:\n\n- **message** (string): A message indicating the result of the operation. It may be empty if the operation was successful.\n    \n- **transaction** (object): An object containing details about the transaction that was created as a result of the top-up.\n    \n    - **ID** (string): The unique identifier for the transaction.\n        \n    - **WalletID** (string): The identifier of the wallet that was topped up.\n        \n    - **TransactionType** (string): The type of transaction (e.g., top-up).\n        \n    - **Amount** (number): The amount that was added to the wallet.\n        \n    - **BalanceAfter** (number): The wallet balance after the top-up transaction.\n        \n    - **ReferenceID** (string): An optional reference identifier for tracking the transaction.\n        \n    - **IdempotencyKey** (string): The idempotency key used in the request.\n        \n    - **CreatedAt** (string): The timestamp indicating when the transaction was created.\n        \n    - **UpdatedAt** (string): The timestamp indicating when the transaction was last updated.\n        \n\n### Usage Notes\n\n- Ensure that the `idempotency_key` is unique for each top-up request to avoid duplicate transactions.\n    \n- Validate the `amount` to ensure it is a positive number before sending the request.\n    \n- Check the response for any error messages or transaction details to confirm that the top-up was successful.\n    \n\nThis API is essential for managing wallet transactions effectively and securely."
+			},
+			"response": []
+		},
+		{
+			"name": "bonus",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idempotency_key\":\"uuidkey3example\",\r\n    \"owner_id\":\"d3f57c3b-3a35-4b6a-9c22-3f8f9e3c1111\",\r\n    \"currency_type_id\":\"03baaf5b-a686-4ae2-a2de-4041801762e9\",\r\n    \"amount\":20\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/wallets/bonus/:wallet_id",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"bonus",
+						":wallet_id"
+					],
+					"variable": [
+						{
+							"key": "wallet_id",
+							"value": "83b73ede-c413-4017-95c8-dcb2c1d29d48"
+						}
+					]
+				},
+				"description": "### Endpoint Description\n\nThis endpoint allows users to add a bonus amount to a specified wallet identified by `wallet_id`. It is designed to facilitate the addition of funds in the form of a bonus, which is particularly useful for promotional activities or customer rewards.\n\n### Request Parameters\n\nThe request must be sent as a JSON object in the body of the POST request. Below are the required parameters:\n\n- **idempotency_key** (string): A unique key to ensure that the request is processed only once. This is useful for preventing duplicate transactions.\n    \n- **owner_id** (string): The unique identifier of the wallet owner. This links the transaction to the correct user.\n    \n- **currency_type_id** (string): The identifier for the type of currency being added to the wallet. This ensures that the correct currency is credited.\n    \n- **amount** (number): The amount of bonus to be added to the wallet. This value should be a positive number representing the bonus amount.\n    \n\n### Response Structure\n\nUpon a successful request, the response will return a JSON object with the following structure:\n\n- **message** (string): A message indicating the status of the request. This may be empty if there are no issues.\n    \n- **transaction** (object): An object containing details about the transaction:\n    \n    - **ID** (string): The unique identifier for the transaction.\n        \n    - **WalletID** (string): The identifier of the wallet that received the bonus.\n        \n    - **TransactionType** (string): The type of transaction (e.g., bonus addition).\n        \n    - **Amount** (number): The amount that was added to the wallet.\n        \n    - **BalanceAfter** (number): The wallet balance after the transaction has been completed.\n        \n    - **ReferenceID** (string): An optional reference identifier for tracking purposes.\n        \n    - **IdempotencyKey** (string): The idempotency key that was used for the request.\n        \n    - **CreatedAt** (string): The timestamp when the transaction was created.\n        \n    - **UpdatedAt** (string): The timestamp when the transaction was last updated.\n        \n\n### Example Response\n\n``` json\n{\n  \"message\": \"\",\n  \"transaction\": {\n    \"ID\": \"\",\n    \"WalletID\": \"\",\n    \"TransactionType\": \"\",\n    \"Amount\": 0,\n    \"BalanceAfter\": 0,\n    \"ReferenceID\": \"\",\n    \"IdempotencyKey\": \"\",\n    \"CreatedAt\": \"\",\n    \"UpdatedAt\": \"\"\n  }\n}\n\n ```\n\nThis endpoint ensures that users can effectively manage bonuses in their wallets while maintaining transaction integrity through the use of idempotency keys."
+			},
+			"response": []
+		},
+		{
+			"name": "spend",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idempotency_key\":\"uuidkey2example\",\r\n    \"owner_id\":\"d3f57c3b-3a35-4b6a-9c22-3f8f9e3c1111\",\r\n    \"currency_type_id\":\"59d55466-4b46-4429-91ae-defe72e0fa09\",\r\n    \"amount\":20\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/v1/wallets/spend",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"wallets",
+						"spend"
+					]
+				},
+				"description": "## Spend from Wallet\n\nThis endpoint allows users to initiate a spending transaction from their wallet. It requires specific parameters to identify the transaction and the wallet from which the funds will be deducted.\n\n### Request\n\n- **Method**: POST\n    \n- **Endpoint**: `{{base_url}}/api/v1/wallets/spend`\n    \n\n#### Request Body\n\nThe request body must be in JSON format and contain the following parameters:\n\n- `idempotency_key` (string): A unique key to ensure that the request is processed only once. This helps in preventing duplicate transactions.\n    \n- `owner_id` (string): The identifier of the wallet owner. This should correspond to the user making the transaction.\n    \n- `currency_type_id` (string): The identifier for the type of currency being spent. This ensures that the transaction is processed in the correct currency.\n    \n- `amount` (number): The amount of currency to be spent from the wallet.\n    \n\n**Example Request Body:**\n\n``` json\n{\n  \"idempotency_key\": \"uuidkey2example\",\n  \"owner_id\": \"d3f57c3b-3a35-4b6a-9c22-3f8f9e...\",\n  \"currency_type_id\": \"59d55466-4b46-4429-91ae-defe72...\",\n  \"amount\": 20\n}\n\n ```\n\n### Response\n\nUpon a successful request, the API will return a JSON response with a status code of 200. The structure of the response body will be as follows:\n\n- `message` (string): A message indicating the status of the transaction (may be empty).\n    \n- `transaction` (object): An object containing details about the transaction:\n    \n    - `ID` (string): The unique identifier for the transaction.\n        \n    - `WalletID` (string): The identifier of the wallet from which the funds were deducted.\n        \n    - `TransactionType` (string): The type of transaction that was performed.\n        \n    - `Amount` (number): The amount that was spent.\n        \n    - `BalanceAfter` (number): The wallet balance after the transaction is completed.\n        \n    - `ReferenceID` (string): An optional reference identifier for tracking purposes.\n        \n    - `IdempotencyKey` (string): The idempotency key used for this transaction.\n        \n    - `CreatedAt` (string): The timestamp when the transaction was created.\n        \n    - `UpdatedAt` (string): The timestamp when the transaction was last updated.\n        \n\n**Example Response Body:**\n\n``` json\n{\n  \"message\": \"\",\n  \"transaction\": {\n    \"ID\": \"\",\n    \"WalletID\": \"\",\n    \"TransactionType\": \"\",\n    \"Amount\": 0,\n    \"BalanceAfter\": 0,\n    \"ReferenceID\": \"\",\n    \"IdempotencyKey\": \"\",\n    \"CreatedAt\": \"\",\n    \"UpdatedAt\": \"\"\n  }\n}\n\n ```\n\nThis endpoint is crucial for managing wallet transactions effectively, ensuring that users can spend their funds securely and reliably."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
